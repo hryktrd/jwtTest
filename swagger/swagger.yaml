@@ -1,0 +1,97 @@
+basePath: /api
+consumes:
+- application/json
+- application/xml
+- application/gob
+- application/x-gob
+definitions:
+  GoaJwtTestSuccess:
+    description: A station of mine (default view)
+    example:
+      ok: true
+    properties:
+      ok:
+        description: Always true
+        example: true
+        type: boolean
+    required:
+    - ok
+    title: 'Mediatype identifier: application/vnd.goa.jwt.test.success; view=default'
+    type: object
+host: localhost:8080
+info:
+  description: Secure API use JWT
+  title: Secure API
+  version: ""
+paths:
+  /jwt:
+    get:
+      description: |-
+        Required security scopes:
+          * `api:access`
+      operationId: jwt#secure
+      produces:
+      - application/vnd.goa.jwt.test.success
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/GoaJwtTestSuccess'
+        "401":
+          description: Unauthorized
+      schemes:
+      - http
+      security:
+      - jwt:
+        - api:access
+      summary: secure jwt
+      tags:
+      - jwt
+  /jwt/signin:
+    get:
+      description: Get JWT Token
+      operationId: jwt#signin
+      responses:
+        "204":
+          description: No Content
+          headers:
+            Authorizatiton:
+              description: Generated JWT
+              type: string
+        "401":
+          description: Unauthorized
+      schemes:
+      - http
+      security:
+      - BasicAuth: []
+      summary: signin jwt
+      tags:
+      - jwt
+produces:
+- application/json
+- application/xml
+- application/gob
+- application/x-gob
+responses:
+  OK:
+    description: OK
+    schema:
+      $ref: '#/definitions/GoaJwtTestSuccess'
+  Unauthorized:
+    description: Unauthorized
+schemes:
+- http
+securityDefinitions:
+  BasicAuth:
+    description: Use client ID and client secret to authenticate
+    type: basic
+  jwt:
+    description: |2-
+
+
+      **Security Scopes**:
+        * `api:access`: API access
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
